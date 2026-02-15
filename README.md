@@ -1,29 +1,21 @@
-# Social Portal - Ethereal P2P Fork
+# Social Portal
 
-A decentralized, privacy-focused social media aggregator and identity manager with robust P2P sync and Freenet-inspired ethereal chunk storage.
+A decentralized, privacy-focused social media aggregator and identity manager.
 
 ## Overview
 
-This is a fork of the original Social Portal, optimized for Android APK with added P2P synchronization capabilities using Gun.js and distributed data storage via IPFS chunks, inspired by Freenet's ethereal datastore. Preserves the anti-tracking ethos by keeping all sync peer-to-peer without central servers.
+The Social Portal is a **Single-Page Application (SPA)** that aggregates content from multiple social networks (Mastodon, Bluesky, Nostr, etc.) via their public APIs directly from your browser.
 
-- **Architecture**: Static Client-Side App (React + Vite) with P2P extensions
-- **Identity**: Polycentric (Local-first, stored in IndexedDB, synced P2P)
-- **Sync**: Gun.js for decentralized data synchronization
-- **Storage**: IPFS for ethereal chunk-based data storage
+- **Architecture**: Static Client-Side App (React + Vite)
+- **Identity**: Polycentric (Local-first, stored in IndexedDB)
 - **Data**: Peer-to-Peer / Direct API fetch (no central backend)
 
 ## Features
 
 - **Unified Feed**: Mix content from ActivityPub, AT Protocol, Nostr, and RSS.
-- **Local Identity**: Your keys and data stay on your device, synced across devices P2P.
-- **Privacy**: No tracking, no algorithm; P2P sync preserves anonymity.
+- **Local Identity**: Your keys and data stay on your device.
+- **Privacy**: No tracking, no algorithm.
 - **Customizable**: Pin networks, manage topics, add custom RSS feeds.
-- **P2P Sync**: Sync identities and settings across devices without servers.
-- **Ethereal Storage**: Store data in distributed IPFS chunks for resilience.
-
-## Self-Hosting
-
-Same as original, but with added P2P features.
 
 ## Self-Hosting
 
@@ -61,18 +53,18 @@ For a truly portable "deploy anywhere" experience (e.g., on Android via Termux, 
     npm run build:portable
     ```
 
-    This creates `social-portal-portable.zip` containing the `dist/` folder and `server.go`.
+    This creates `social-portal-portable.zip` containing the `dist/` folder and `server.py`.
 
 2. **Deploy**:
     Copy `social-portal-portable.zip` to your device, extract it, and run:
 
     ```bash
-    go run scripts/server.go
+    python3 scripts/server.py
     ```
 
 3. **Access**: Open `http://localhost:8080` (or the printed Network URL).
 
-This server handles static app hosting and CORS proxying with the Go standard library (requires `go` installed).
+This script serves the app and handles the CORS proxying automatically, with no external dependencies (standard Python library only).
 
 ## Remote Access & Security
 
