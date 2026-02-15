@@ -1,112 +1,73 @@
-# Social Portal
+# Social Portal Go (Alpha Fork)
 
-A decentralized, privacy-focused social media aggregator and identity manager.
+Go-backed alpha fork of the main Social Portal project.
 
-## Overview
+## What this fork is
 
-The Social Portal is a **Single-Page Application (SPA)** that aggregates content from multiple social networks (Mastodon, Bluesky, Nostr, etc.) via their public APIs directly from your browser.
+This repository is based on **IceMatrix256/social-portal** (the main project) and keeps the React UI while introducing a Go runtime path for serving/proxying.
 
-- **Architecture**: Static Client-Side App (React + Vite)
-- **Identity**: Polycentric (Local-first, stored in IndexedDB)
-- **Data**: Peer-to-Peer / Direct API fetch (no central backend)
+- **Frontend**: React + Vite
+- **Gateway/Proxy**: Go (`scripts/server.go`)
+- **Identity**: Polycentric (local-first, IndexedDB)
+- **Status**: Alpha (actively iterating)
+
+## What changed vs main
+
+- Added Go server for static hosting + proxy endpoints.
+- Native/mobile fetch path hardening for better real-device behavior.
+- Reliability improvements for selected media adapters (Imgur/Pixelfed path).
+- Android debug APK build + release flow for this fork.
 
 ## Features
 
-- **Unified Feed**: Mix content from ActivityPub, AT Protocol, Nostr, and RSS.
-- **Local Identity**: Your keys and data stay on your device.
-- **Privacy**: No tracking, no algorithm.
-- **Customizable**: Pin networks, manage topics, add custom RSS feeds.
-
-## Self-Hosting
-
-Since the app is a static SPA, you can host it anywhere.
-
-1. **Build**:
-
-    ```bash
-    npm run build
-    ```
-
-2. **Deploy**:
-    Serve the `dist/` directory using any web server (Nginx, Caddy, Apache) or static host (Vercel, Netlify, GitHub Pages).
-
-### CORS Proxy Note
-
-To bypass browser CORS restrictions for some legacy networks (like RSS feeds), the app falls back to `allorigins.win`/other public proxies or internal dev proxies when needed. For a robust self-hosted production setup, it is recommended to run a small CORS proxy alongside the static app.
-
-Networks that support direct (peer-to-peer) connections without a proxy:
-
-- Bluesky
-- Nostr (via Relays)
-- Misskey (most instances)
-- Mastodon (most instances)
-
-In production/native mode, these direct-capable networks are attempted directly first; proxy fallback is only used if the direct request fails.
-
-## Portable Deployment (Cross-Platform)
-
-For a truly portable "deploy anywhere" experience (e.g., on Android via Termux, or a USB stick), we provide a build command.
-
-1. **Build**:
-
-    ```bash
-    npm run build:portable
-    ```
-
-    This creates `social-portal-portable.zip` containing the `dist/` folder and `server.py`.
-
-2. **Deploy**:
-    Copy `social-portal-portable.zip` to your device, extract it, and run:
-
-    ```bash
-    python3 scripts/server.py
-    ```
-
-3. **Access**: Open `http://localhost:8080` (or the printed Network URL).
-
-This script serves the app and handles the CORS proxying automatically, with no external dependencies (standard Python library only).
-
-## Remote Access & Security
-
-To access your self-hosted instance securely from other devices (e.g., hosting on a Raspberry Pi or Android phone and accessing from an iPhone), we strongly recommend using a mesh VPN like **Tailscale**.
-
-- **Zero Config**: Install Tailscale on your host and client devices.
-- **No Open Ports**: You do not need to open ports on your router or expose your IP to the public internet.
-- **Security**: Access is encrypted and authenticated. Only your devices can see the Social Portal.
-- **MagicDNS**: You can access your instance via a stable hostname (e.g., `http://raspberry-pi:8080`) regardless of network changes.
+- Unified cross-network feed (Mastodon, Bluesky, Nostr, RSS, etc.)
+- Local identity and local persistence
+- No centralized account required
+- Customizable sources/topics and saved content
 
 ## Development
 
 ```bash
 npm install
-npm run dev
+npm run start
 ```
 
-## 🚀 One-Line Deployment
+`npm run start` launches both:
+- Go backend (`go run scripts/server.go`)
+- Vite frontend
 
-### 📱 Native Android APK
-
-If you prefer a standalone app experience without using Termux, you can download the latest pre-built APK:
-
-1. Go to the [Social Portal Releases Page](https://github.com/IceMatrix256/social-portal/releases).
-2. Download the `app-debug.apk` file from the latest release.
-3. Install the `.apk` file on your Android device.
-
----
-
-### 💻 Android (Termux) /  Mac / 🐧 Linux (One-Liner)
-
-This is for the "Power User" experience with a local proxy backend.
+## Build
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/icematrix256/social-portal/main/deploy/install.sh | bash
+npm run build
 ```
 
-### 🪟 Windows (PowerShell)
+## Portable Deployment (Go)
 
-```powershell
-iex (iwr https://raw.githubusercontent.com/icematrix256/social-portal/main/deploy/install.ps1 -UseBasicParsing)
-```
+1. Build portable bundle:
 
-> [!NOTE]
-> These scripts will automatically detect your OS, install necessary dependencies (Python, Node, Git), clone the repository, and set up a desktop shortcut or terminal alias.
+   ```bash
+   npm run build:portable
+   ```
+
+   Produces `social-portal-portable.zip` with `dist/` + `scripts/server.go`.
+
+2. On target machine:
+
+   ```bash
+   go run scripts/server.go
+   ```
+
+3. Open:
+   - `http://localhost:8090`
+
+## Android APK (Alpha)
+
+- Repo: https://github.com/IceMatrix256/social-portal-go
+- Releases: https://github.com/IceMatrix256/social-portal-go/releases
+- Current alpha includes an installable debug APK asset.
+
+## Notes
+
+- This fork intentionally does **not** include ethereal/I2P branding.
+- Full Go-side adapter aggregation is still in progress; current alpha focuses on reliability and deployability.
